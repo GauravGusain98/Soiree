@@ -8,7 +8,13 @@ use Illuminate\Http\Request;
 class SoireeController extends Controller
 {
     public function showAdmin(){
-        return view("admin");
+        request()->validate([
+            'loginEmail'=>'required',
+            'password'=>'required'
+        ]);
+        $login = new Admin();
+        $login->email = request()->email . "@gmail.com";
+        $login->password =request()->password;
     }
 
     public function createAdmin(){
@@ -17,15 +23,11 @@ class SoireeController extends Controller
             'email'=>'required',
             'password1'=>'required| min:5',
             'password2'=> ['required', 'min:5', "same:password1"]
-        ]);
-        if(request()->password1 == request()->password2)
-        {   
+        ]); 
             $admin = new Admin();
             $admin->name = request()->name;
             $admin->email = request()->email . "@gmail.com";
             $admin->password = request()->password1;
             $admin->save();
-        }
-
     }
 }

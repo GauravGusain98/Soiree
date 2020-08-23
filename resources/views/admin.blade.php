@@ -17,12 +17,12 @@
 
 @section ("adminLogin")
     <div action="/admin" method="get" class="container" id="admin-login">
-        <form class="col-sm-10 col-lg-6">
+        <form action="/admin" method="get" class="col-sm-10 col-lg-6">
         @csrf
             <div class="form-group">
                 <label>Email: </label>
-                <div class="input-group">
-                    <input class="form-control shadow" type="text" name="email">
+                <div class="input-group">   
+                    <input class="form-control shadow" type="text" name="loginEmail" value="{{old('loginEmail')}}">
                     <span class="input-group-append input-group-text">@company.com</span>
                 </div>
             </div>
@@ -41,7 +41,7 @@
         @csrf
             <div class="form-group">
                 <label>Name: </label>
-                <input class="form-control shadow @error('name') border-danger @enderror" type="text" name="name">
+                <input class="form-control shadow @error('name') border-danger @enderror" type="text" name="name" value="{{old('name')}}">
                 @error('name')
                 <p style="color:red;">{{$errors->first('name')}}</p>
                 @enderror
@@ -49,7 +49,7 @@
             <div class="form-group">
                 <label>Email: </label>
                 <div class="input-group">
-                    <input class="form-control shadow @error('email') border-danger @enderror" type="text" name="email">
+                    <input class="form-control shadow @error('email') border-danger @enderror" type="text" name="email" value="{{old('email')}}">
                     <span class="input-group-append input-group-text">@company.com</span>
                 </div>
                 @error('name')

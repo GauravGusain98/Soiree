@@ -18,6 +18,10 @@ Route::get('/', function () {
 });
 Auth::routes();
 
+Route::get("/soiree", function(){
+    return view("admin");
+});
+
 Route::get("/admin","SoireeController@showAdmin");
 
 Route::post("/admin","SoireeController@createAdmin");
