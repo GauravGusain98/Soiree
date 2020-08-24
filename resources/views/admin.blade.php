@@ -12,25 +12,35 @@
         @if($errors->any())     <!--error condition method 1-->
         <h6 style="color:red;">There are errors in the form.</h6>
         @endif
+        @if(Session('error'))     <!--error condition method 1-->
+        <h6 style="color:red;">Wrong Login Credentials.</h6>
+        @endif
+
     </div>
 @endsection
 
 @section ("adminLogin")
-    <div action="/admin" method="get" class="container" id="admin-login">
+    <div class="container" id="admin-login">
         <form action="/admin" method="get" class="col-sm-10 col-lg-6">
         @csrf
             <div class="form-group">
                 <label>Email: </label>
                 <div class="input-group">   
-                    <input class="form-control shadow" type="text" name="loginEmail" value="{{old('loginEmail')}}">
+                    <input class="form-control shadow @error('loginEmail') border-danger @enderror" type="text" name="loginEmail" value="{{old('loginEmail')}}" placeholder="Anything after @ will be ignored">
                     <span class="input-group-append input-group-text">@company.com</span>
                 </div>
+                <!-- @error('loginEmail')       
+                <p style="color:red;">{{$errors->first('loginEmail')}}</p>
+                @enderror -->
             </div>
             <div class="form-group">
                 <label>Password: </label>
-                <input class="form-control shadow" type="password">
+                <input name="password" class="form-control shadow @error('password') border-danger @enderror" type="password">
+                <!-- @error('password')
+                <p style="color:red;">{{$errors->first('password')}}</p>
+                @enderror -->
             </div>
-            <input class="btn btn-success shadow" type="submit" value="Login"> 
+            <input id="admin-login-submit"class="btn btn-success shadow" type="submit" value="Login"> 
         </form>
     </div>
 @endsection
@@ -49,15 +59,15 @@
             <div class="form-group">
                 <label>Email: </label>
                 <div class="input-group">
-                    <input class="form-control shadow @error('email') border-danger @enderror" type="text" name="email" value="{{old('email')}}">
+                    <input class="form-control shadow @error('email') border-danger @enderror" type="text" name="email" value="{{old('email')}}" placeholder="Anything after @ will be ignored">
                     <span class="input-group-append input-group-text">@company.com</span>
                 </div>
-                @error('name')
+                @error('email')
                 <p style="color:red;">{{$errors->first('email')}}</p>
                 @enderror
             </div>
             <div class="form-group">
-                <label>Password: </label>{{$errors->first('password')}}
+                <label>Password: </label>
                 <input class="form-control shadow @error('password1') border-danger @enderror" type="password" name="password1">
                 @if($errors->has('password1'))
                 <p style="color:red;">{{$errors->first('password1')}}</p>
@@ -70,7 +80,7 @@
                 <p style="color:red;">{{$errors->first('password2')}}</p>
                 @endif
             </div>
-            <input class="btn btn-success shadow" type="submit" value="Register"> 
+            <input id="admin-register-submit" class="btn btn-success shadow" type="submit" value="Register"> 
         </form>
     </div>
-@endsection
+@endsection     
