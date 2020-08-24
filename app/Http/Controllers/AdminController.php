@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Admin;
 use Illuminate\Http\Request;
 use Auth;
-class SoireeController extends Controller
+class AdminController extends Controller
 {
 
     public function showHome(){

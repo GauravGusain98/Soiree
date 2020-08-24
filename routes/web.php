@@ -18,12 +18,12 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::get("/soiree", "SoireeController@showHome");
-Route::post("/logout", "SoireeController@logout");
+Route::get("/soiree", "AdminController@showHome");
+Route::post("/logout", "AdminController@logout");
 
-Route::get("/admin","SoireeController@login");
+Route::get("/admin","AdminController@login");
 
-Route::post("/admin","SoireeController@register");
+Route::post("/admin","AdminController@register");
 
 
 Route::get('/home', 'HomeController@index')->name('home');
