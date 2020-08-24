@@ -6,6 +6,7 @@
     <link href="/css/app.css" rel="stylesheet">
 </head>
 <body>
+    @yield('success')
     @yield('adminButtons')
     @yield("adminLogin")
     @yield('adminRegister')

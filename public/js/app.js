@@ -49764,6 +49764,9 @@ $(document).ready(function () {
       'animation': 'admin-slide 0.7s'
     });
   });
+  $('#login-btn').click(function () {
+    window.location.replace('http://soiree.test/soiree');
+  });
 });
 
 /***/ }),

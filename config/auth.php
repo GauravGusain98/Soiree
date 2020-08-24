@@ -46,6 +46,7 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+
     ],
 
     /*
@@ -71,11 +72,17 @@ return [
             'model' => App\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
+        'users' => [
+            'driver' => 'database',
+            'table' => 'admins',
+        ],
+
+        // 'admin' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Admin::class,
         // ],
     ],
+
 
     /*
     |--------------------------------------------------------------------------

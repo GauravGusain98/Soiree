@@ -18,13 +18,16 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::get("/soiree", function(){
-    return view("admin");
-});
+Route::get("/soiree", "SoireeController@showHome");
+Route::post("/logout", "SoireeController@logout");
 
-Route::get("/admin","SoireeController@showAdmin");
+Route::get("/admin","SoireeController@login");
 
-Route::post("/admin","SoireeController@createAdmin");
+Route::post("/admin","SoireeController@register");
 
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/admin/home', function(){
+    return view('homepage');
+});

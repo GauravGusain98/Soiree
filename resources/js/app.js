@@ -40,7 +40,11 @@ $(document).ready(function(){
     })
     
     $('#admin-register-btn').click(function(){
-        $("#admin-login").css({'display':'none'})
+        $("#admin-login").css({'display':'none'});
         $("#admin-register").css({'display':'block', 'margin-top': '3rem', 'animation':'admin-slide 0.7s'});
     })
+
+    $('#login-btn').click(function(){
+        window.location.replace('http://soiree.test/soiree');
+    });
 });
