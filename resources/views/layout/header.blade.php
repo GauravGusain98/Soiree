@@ -10,6 +10,7 @@
     @yield('adminButtons')
     @yield("adminLogin")
     @yield('adminRegister')
+    @yield('guestlogin')
     <script src="/js/app.js"></script>
 </body>
 </html>

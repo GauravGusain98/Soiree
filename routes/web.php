@@ -18,16 +18,30 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::get("/soiree", "AdminController@showHome");
-Route::post("/logout", "AdminController@logout");
+Route::post("/adminverify", "AdminController@verify")->name('verify');
+
+Route::post("/guest/login","GuestController@login")->name("guest_login");
+Route::get("/guest/login","GuestController@index");
+
+Route::get("/adminpage", "AdminController@showHome");
+Route::post("/adminlogout", "AdminController@logout");
+Route::post("/guestlogout", "GuestController@logout");
 
 Route::get("/admin","AdminController@login");
-
 Route::post("/admin","AdminController@register");
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/admin/home', function(){
-    return view('homepage');
+    return view('adminHomepage');
 });
+
+Route::get('/guest/home', function(){
+    return view('guestHomepage');
+});
+
+Route::get("/admin/registered",function(){
+    return view("registered_success");
+});
+

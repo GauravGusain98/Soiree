@@ -18,6 +18,7 @@ class CreateAdminTable extends Migration
             $table->string('name');
             $table->string('email_address')->unique();
             $table->string('password');
+            $table->string('verification_code');
             $table->integer("verified")->default("0");
             $table->timestamps();
         });
