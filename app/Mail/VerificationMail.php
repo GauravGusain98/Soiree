@@ -28,6 +28,6 @@ class VerificationMail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_USERNAME'), "Soiree")->subject("Invitation to Soiree!")->view('verificationMail', ['data'=>$this->email_data]);
+        return $this->from(env('MAIL_USERNAME'), "Soiree")->subject("Account Activation!")->view('verificationMail', ['data'=>$this->email_data]);
     }
 }

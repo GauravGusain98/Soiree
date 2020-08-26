@@ -13,7 +13,7 @@
     <form action="/adminverify" method="POST"  class="col-lg-6 col-md-5 col-sm-10 mt-5">
     @csrf
         <div class="form-group" style="display:none;">
-            <input name="email"  value="{{ Session('adminverify') }}" required>
+            <input name="email"  value="{{ Session('adminverification') }}">
         </div> 
         <div class="form-group">
             <label class="display-4" style="font-size:1.5rem;">Activation code</label>
