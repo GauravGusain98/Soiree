@@ -3,6 +3,8 @@
 <script>window.location.replace("http://soiree.test/adminpage")</script>
 @endif
 
+
+@section("adminHomepage")
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ url('/admin/home') }}">
@@ -27,7 +29,6 @@
                                                 document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
-
                             <form id="logout-form" action="/adminlogout" method="POST" style="display: none;">
                                 @csrf
                             </form>
@@ -42,3 +43,61 @@
     <div class="text-success" style="font-size:1.5rem">{{Session('AdminVerified')}}</div>
 </div>
 @endif
+
+<div class="container">
+    <button class="btn btn-primary mt-3" id="show-requests-btn">Invitation Requests</button>
+    <button class="btn btn-primary mt-3 ml-2" id="show-guests-btn">Guests</button>
+    <button class="btn btn-primary mt-3 ml-2" id="show-cancelled-btn">Cancelled Requests</button>
+</div>
+
+<div class="container mt-4">
+<table id="requests-table" class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Message</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="table-data">
+
+    </tbody>
+</table>
+</div>
+
+<div class="container mt-4 " >
+<table id="guests-table" class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody id="guests-data">
+    </tbody>
+</table>
+</div>
+
+<div class="container mt-4 " >
+<table id="cancelled-requests-table" class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>S.No.</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Message</th>
+            <th>change the status</th>
+        </tr>
+    </thead>
+    <tbody id="cancelled-requests-data">
+    </tbody>
+</table>
+</div>
+
+@endsection

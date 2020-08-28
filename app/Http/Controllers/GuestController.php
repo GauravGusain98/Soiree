@@ -13,13 +13,14 @@ class GuestController extends Controller
     }
 
     public function login(request $request){
+        request()->session()->flush();
         $count =  Guest::where('email', $request->login_email)->count();
         if($count > 0)
         {
             $result=Guest::where('email', $request->login_email)->first();
             if(Hash::check($request->login_password,$result->password) && $result->verified == 1)
             {
-                Session::put('success',  $result->name );
+                Session::put('guestsuccess',  $result );
                 return redirect('/guest/home');
             }
             else{

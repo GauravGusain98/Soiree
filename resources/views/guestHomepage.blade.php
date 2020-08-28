@@ -1,9 +1,9 @@
 @extends ("layout.header")
-@if(!Session('success'))
+@if(!Session('guestsuccess'))
 <script>window.location.replace("http://soiree.test/guest/login")</script>
 @endif
 
-@if(Session('success'))
+@if(Session('guestsuccess'))
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('http://wordpress.local') }}">
@@ -24,7 +24,7 @@
                         <!-- Authentication Links -->
                         <li class="nav-item dropdown">
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                               Hello, {{Session('success')}} <span class="caret"></span>
+                               Hello, {{Session('guestsuccess')->name}} <span class="caret"></span>
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">

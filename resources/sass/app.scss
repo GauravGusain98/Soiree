@@ -1,3 +1,6 @@
+//Fontawesome
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
 
@@ -18,4 +21,24 @@
 @keyframes admin-slide{
     0% { margin-top: 0px; }
     100% { margin-top: 3rem; }
+}
+
+#requests-table{
+    position: relative;
+    height: 300px;
+    overflow: auto;
+    display:none;
+}
+
+#guests-table{
+    position: absolute;
+    overflow: auto;
+    display:none;
+}
+
+#cancelled-requests-table{
+    position: absolute;
+    height: 300px;
+    overflow: auto;
+    display:none;
 }

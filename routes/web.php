@@ -45,3 +45,8 @@ Route::get("/admin/registered",function(){
     return view("registered_success");
 });
 
+Route::post("/requests", "AdminHomepageController@showRequests");
+Route::post("/guests", "AdminHomepageController@showGuests");
+Route::post("/status", "AdminHomepageController@status");
+Route::post("/cancelled", "AdminHomepageController@showCancelledRequests");
+Route::post("/changestatus", "AdminHomepageController@changeStatus");
