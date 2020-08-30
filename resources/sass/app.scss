@@ -31,14 +31,27 @@
 }
 
 #guests-table{
-    position: absolute;
+    position: relative;
+    height: 300px;
     overflow: auto;
     display:none;
 }
 
 #cancelled-requests-table{
-    position: absolute;
+    position: relative;
     height: 300px;
     overflow: auto;
     display:none;
+}
+
+#add-Function-container{
+    position:relative;
+    height:70vh;
+    overflow:auto;
+    display:none;
+}
+
+#error{
+    color:red;
+    display: none;
 }

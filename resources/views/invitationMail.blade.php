@@ -1,6 +1,3 @@
-<img src="C:\Users\Gaurav Gusain\Downloads\soiree event.JPG">
-<br>
-<br>
 Hello {{$data['name']}},
 <br>
 <br>

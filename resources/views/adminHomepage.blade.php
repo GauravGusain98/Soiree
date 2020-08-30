@@ -45,7 +45,8 @@
 @endif
 
 <div class="container">
-    <button class="btn btn-primary mt-3" id="show-requests-btn">Invitation Requests</button>
+    <button class="btn btn-primary mt-3 ml-2" id="show-add-function-btn">Add a Function</button>
+    <button class="btn btn-primary mt-3 ml-2" id="show-requests-btn">Invitation Requests</button>
     <button class="btn btn-primary mt-3 ml-2" id="show-guests-btn">Guests</button>
     <button class="btn btn-primary mt-3 ml-2" id="show-cancelled-btn">Cancelled Requests</button>
 </div>
@@ -79,6 +80,7 @@
         </tr>
     </thead>
     <tbody id="guests-data">
+
     </tbody>
 </table>
 </div>
@@ -99,5 +101,28 @@
     </tbody>
 </table>
 </div>
+
+<div id="add-function-container" class="container mt-4">
+    <form action="" method="post" id="add-function" class="col-lg-6 col-md-8 col-sm-12">
+        @csrf
+        <div class="form-group">
+            <label>Function Name</label>
+            <input name="function-name" class="form-control" type='text' required>
+        </div>
+        <div class="form-group">
+            <label>Function date</label>
+            <input name="function-date" class="form-control" type='date' required>
+        </div>
+        
+        <div class="form-group">
+            <label>Function time</label>
+            <input name="function-time" class="form-control" type='time' required>
+        </div>  
+    </form>
+    <input type="submit" id="add-event-btn" class="ml-3 btn btn-light shadow btn-outline-dark" value= "Add an Event">
+    <input type="submit" id="save-function-btn" class="ml-2 btn btn-light shadow btn-outline-dark px-4" value="Save">
+    <div id="error" class="ml-3 mt-1">Please fill all the fields.</div>
+</div>
+
 
 @endsection

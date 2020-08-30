@@ -49752,6 +49752,7 @@ $.ajaxSetup({
   }
 });
 $(document).ready(function () {
+  var eventCount = 0;
   $('#admin-login-btn').click(function () {
     $("#admin-register").css({
       'display': 'none'
@@ -49780,6 +49781,9 @@ $(document).ready(function () {
     $("#guests-table").css({
       'display': 'none'
     });
+    $("#add-function-container").css({
+      'display': "none"
+    });
     $("#requests-table").css({
       'display': 'block'
     });
@@ -49794,7 +49798,6 @@ $(document).ready(function () {
           Table.removeChild(Table.lastChild);
         }
 
-        console.log(Table);
         var i = 0;
         data.forEach(function (item) {
           var row = Table.insertRow(i);
@@ -49803,7 +49806,7 @@ $(document).ready(function () {
           row.insertCell(2).innerHTML = item['email'];
           row.insertCell(3).innerHTML = item['phone'];
           row.insertCell(4).innerHTML = item['message'];
-          row.insertCell(5).innerHTML = '<a href="" ' + "name='" + (i - 1) + "'" + ' class="text-primary fas fa-check-square"></a> | ' + '<a href="" ' + "name='" + (i - 1) + "'" + ' class="text-danger fas fa-times"></a>';
+          row.insertCell(5).innerHTML = '<a href="" ' + "name='" + (i - 1) + "'" + ' class="guest-status-btn text-primary fas fa-check-square"></a> | ' + '<a href="" ' + "name='" + (i - 1) + "'" + ' class="guest-status-btn text-danger fas fa-times"></a>';
         });
       }
     });
@@ -49815,6 +49818,9 @@ $(document).ready(function () {
     });
     $("#requests-table").css({
       'display': 'none'
+    });
+    $("#add-function-container").css({
+      'display': "none"
     });
     $("#guests-table").css({
       'display': 'block'
@@ -49842,7 +49848,7 @@ $(document).ready(function () {
       }
     });
   });
-  $(document).on("click", ".fas", function (e) {
+  $(document).on("click", ".guest-status-btn", function (e) {
     e.preventDefault();
     var Table = document.getElementById("table-data");
     var num = this.name;
@@ -49883,6 +49889,9 @@ $(document).ready(function () {
     });
     $("#guests-table").css({
       'display': 'none'
+    });
+    $("#add-function-container").css({
+      'display': "none"
     });
     $("#cancelled-requests-table").css({
       'display': 'block'
@@ -49932,6 +49941,116 @@ $(document).ready(function () {
         Table.rows[num].cells['5'].style.cssText = "color:Green;";
       }
     });
+  });
+  $("#show-add-function-btn").click(function (e) {
+    eventCount = 0;
+    e.preventDefault();
+    $("#requests-table").css({
+      'display': 'none'
+    });
+    $("#guests-table").css({
+      'display': 'none'
+    });
+    $("#cancelled-requests-table").css({
+      'display': 'none'
+    });
+    $("#add-function-container").css({
+      'display': "block"
+    });
+  });
+
+  function functionError() {
+    var error = 0;
+
+    if (eventCount != 0) {
+      var eventName = document.getElementsByName("event-" + eventCount)[0].value;
+      var eventTime = document.getElementsByName("event-time-" + eventCount)[0].value;
+      if (eventName == "" || eventTime == "") error = 1;
+    } else if (eventCount == 0) {
+      if ($("[name=function-name]").val() == "" || $("[name=function-date]").val() == "" || $("[name=function-time]").val() == "") error = 1;
+    }
+
+    return error;
+  }
+
+  $(document).on('click', "#add-event-btn", function (e) {
+    e.preventDefault();
+    var error = functionError();
+    if (error > 0) $("#error").css({
+      'display': "block"
+    });else {
+      eventCount++;
+      $("#error").css({
+        'display': "none"
+      });
+      $("#add-function").append("<div name='eventname" + eventCount + "'" + " class='form-group'><label> Event" + eventCount + " </label> " + '<a href="" ' + "name='" + eventCount + "'" + ' class=" event-cancel text-danger fas fa-times ml-3"></a>' + " <input name='event-" + eventCount + "' class='form-control' required></div>");
+      $("#add-function").append("<div name='eventtime" + eventCount + "'" + " class='form-group'><label> Event" + eventCount + " Time </label> <input name='event-time-" + eventCount + "' class='form-control' type='time' required></div>");
+    }
+  });
+  $(document).on('click', '#save-function-btn', function (e) {
+    e.preventDefault();
+    var error = functionError();
+    if (error > 0) $("#error").css({
+      'display': "block"
+    });else {
+      $("#error").css({
+        'display': "none"
+      });
+      var input_data = {
+        "count": eventCount
+      };
+
+      for (var i = 0; i < eventCount; i++) {
+        var eventName = document.getElementsByName("event-" + (i + 1))[0].value;
+        var eventTime = document.getElementsByName("event-time-" + (i + 1))[0].value;
+        input_data["eventName_" + (i + 1)] = eventName;
+        input_data["eventTime_" + (i + 1)] = eventTime;
+      }
+
+      input_data['functionName'] = $("[name=function-name]").val();
+      input_data['functionDate'] = $("[name=function-date]").val();
+      input_data['functionTime'] = $("[name=function-time]").val();
+      $.ajax({
+        url: "/addfunction",
+        data: input_data,
+        type: "post",
+        success: function success(response) {
+          for (var _i = 0; _i < eventCount; _i++) {
+            document.getElementsByName("eventname" + (_i + 1))[0].remove();
+            document.getElementsByName("eventtime" + (_i + 1))[0].remove();
+          }
+
+          document.getElementById("add-function").reset();
+          document.getElementById("add-function-container").style.display = "none";
+          alert("Event saved Successfully");
+        },
+        error: function error() {
+          alert("There are errors in the forms");
+        }
+      });
+    }
+  });
+  $(document).on('click', '.event-cancel', function (e) {
+    e.preventDefault();
+    var num = this.name;
+    var elem1 = document.getElementsByName("eventname" + num)[0];
+    var elem2 = document.getElementsByName("eventtime" + num)[0];
+    elem1.remove();
+    elem2.remove();
+
+    for (var i = parseInt(num) + 1; i <= eventCount; i++) {
+      var divelement1 = document.getElementsByName("eventname" + i)[0];
+      var divelement2 = document.getElementsByName("eventtime" + i)[0];
+      document.getElementsByName(i)[0].setAttribute('name', i - 1);
+      divelement1.firstChild.innerHTML = "Event" + (i - 1);
+      divelement1.lastChild.setAttribute("name", "event-" + (i - 1));
+      divelement1.setAttribute("name", "eventname" + (i - 1));
+      divelement2.firstChild.innerHTML = "Event" + (i - 1) + " Time";
+      divelement2.lastChild.setAttribute("name", "event-time-" + (i - 1));
+      divelement2.setAttribute("name", "eventtime" + (i - 1));
+    }
+
+    eventCount--;
   });
 });
 
