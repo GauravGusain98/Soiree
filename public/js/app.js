@@ -49721,7 +49721,8 @@ module.exports = function(module) {
  * building robust, powerful web applications using Vue and Laravel.
  */
 var _require = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"),
-    each = _require.each;
+    each = _require.each,
+    post = _require.post;
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -49753,6 +49754,7 @@ $.ajaxSetup({
 });
 $(document).ready(function () {
   var eventCount = 0;
+  var oldDate = "";
   $('#admin-login-btn').click(function () {
     $("#admin-register").css({
       'display': 'none'
@@ -49775,6 +49777,9 @@ $(document).ready(function () {
   });
   $("#show-requests-btn").click(function (e) {
     e.preventDefault();
+    $("#show-function-container").css({
+      'display': "none"
+    });
     $("#cancelled-requests-table").css({
       'display': 'none'
     });
@@ -49813,6 +49818,9 @@ $(document).ready(function () {
   });
   $("#show-guests-btn").click(function (e) {
     e.preventDefault();
+    $("#show-function-container").css({
+      'display': "none"
+    });
     $("#cancelled-requests-table").css({
       'display': 'none'
     });
@@ -49884,6 +49892,9 @@ $(document).ready(function () {
   });
   $("#show-cancelled-btn").click(function (e) {
     e.preventDefault();
+    $("#show-function-container").css({
+      'display': "none"
+    });
     $("#requests-table").css({
       'display': 'none'
     });
@@ -49945,6 +49956,9 @@ $(document).ready(function () {
   $("#show-add-function-btn").click(function (e) {
     eventCount = 0;
     e.preventDefault();
+    $("#show-function-container").css({
+      'display': "none"
+    });
     $("#requests-table").css({
       'display': 'none'
     });
@@ -50024,9 +50038,19 @@ $(document).ready(function () {
           document.getElementById("add-function-container").style.display = "none";
           alert("Event saved Successfully");
         },
-        error: function error() {
-          alert("There are errors in the forms");
-        }
+        error: function (_error) {
+          function error(_x) {
+            return _error.apply(this, arguments);
+          }
+
+          error.toString = function () {
+            return _error.toString();
+          };
+
+          return error;
+        }(function (error) {
+          alert(JSON.parse(error.responseText).message);
+        })
       });
     }
   });
@@ -50051,6 +50075,179 @@ $(document).ready(function () {
     }
 
     eventCount--;
+  });
+  $(document).on('click', ".show-function-btn", function (e) {
+    e.preventDefault();
+    $("#requests-table").css({
+      'display': 'none'
+    });
+    $("#guests-table").css({
+      'display': 'none'
+    });
+    $("#cancelled-requests-table").css({
+      'display': 'none'
+    });
+    $("#add-function-container").css({
+      'display': "none"
+    });
+    $("#show-function-container").css({
+      'display': "block"
+    });
+    $.ajax({
+      url: "/showfunction",
+      type: "post",
+      success: function success(response) {
+        document.getElementById("show-function-container").innerHTML = "";
+        console.log(response);
+
+        if (response.length > 0) {
+          var i = 0;
+          response.forEach(function (element) {
+            i++;
+            var div = document.getElementById("show-function-container");
+            var collapsehead = document.createElement("div");
+            collapsehead.setAttribute("id", "functionAccordian" + i);
+            collapsehead.classList.add("card");
+            var btn1 = document.createElement("button");
+            btn1.classList.add("btn", "btn-link", "btn-dark", "text-light");
+            btn1.setAttribute("data-toggle", "collapse");
+            btn1.style.cssText = "text-align:left";
+            btn1.setAttribute("data-target", "#collapse" + i);
+            btn1.innerHTML = element['Name'];
+            collapsehead.appendChild(btn1);
+            var editBtn = document.createElement("a");
+            editBtn.setAttribute('href', "");
+            editBtn.setAttribute('id', "edit-function" + i);
+            editBtn.setAttribute('class', "text-danger edit-function");
+            editBtn.style.cssText = "margin-top: 5px; position: absolute; right:1px; font-size: 2em;";
+            editBtn.innerHTML = '<i class="fas fa-pen-square"></i>';
+            collapsehead.appendChild(editBtn);
+            div.appendChild(collapsehead);
+            var cardbody = document.createElement("div");
+            cardbody.classList.add("collapse", "hide");
+            cardbody.setAttribute("id", "collapse" + i);
+            collapsehead.appendChild(cardbody);
+            var cardText = document.createElement("div");
+            cardText.setAttribute('id', "function-data-" + i);
+            cardText.innerHTML = "<p name='name" + i + "' > Function: " + "<a id='a_name" + i + "'>" + element['Name'] + "</a>" + "</p> <p name='date" + i + "'> Date: " + "<a id='a_date" + i + "'>" + element['Date'] + "</a>" + "</p> <p name='time" + i + "'> Time: " + "<a id='a_time" + i + "'>" + element['Time'] + "</a>" + "</p>";
+            var len = Object.keys(element).length;
+
+            for (var j = 1; j <= (len - 3) / 2; j++) {
+              if (element['event1'] != null) {
+                var para1 = document.createElement("p");
+                para1.setAttribute('name', 'eventname' + j);
+                para1.innerHTML = "Event" + j + ": " + element['event' + j];
+                var para2 = document.createElement("p");
+                para2.setAttribute('name', 'eventname' + j);
+                para2.innerHTML = "Event Time: " + element['eventTime' + j];
+                cardText.appendChild(para1);
+                cardText.appendChild(para2);
+              }
+            }
+
+            cardText.classList.add("card-body", "ml-2");
+            cardbody.appendChild(cardText);
+          });
+        }
+      }
+    });
+  });
+  $(document).on('click', '.edit-function', function (e) {
+    e.preventDefault();
+    var id = this.id.substr(-1);
+
+    if (document.getElementById("save-function" + id) != null) {
+      document.getElementById("save-function" + id).remove();
+      document.getElementById("delete-function" + id).remove();
+      document.getElementById("cancel-edit" + id).remove();
+    }
+
+    var collapseDiv = document.getElementById("collapse" + id);
+    var saveBtn = document.createElement('button');
+    saveBtn.innerHTML = "Save";
+    saveBtn.setAttribute("id", "save-function" + id);
+    saveBtn.classList.add("btn", "btn-success", "editfunction-save-btn");
+    var cancelBtn = document.createElement('button');
+    cancelBtn.innerHTML = "Cancel";
+    cancelBtn.classList.add("btn", "btn-danger", "editfunction-cancel-btn", "show-function-btn");
+    var deleteBtn = document.createElement('button');
+    deleteBtn.innerHTML = "Delete";
+    deleteBtn.setAttribute("id", "delete-function" + id);
+    deleteBtn.classList.add("btn", "btn-light", "editfunction-delete-btn");
+    collapseDiv.appendChild(saveBtn);
+    collapseDiv.appendChild(cancelBtn);
+    collapseDiv.appendChild(deleteBtn);
+    var name = document.getElementsByName("name" + id)[0];
+    var date = document.getElementsByName("date" + id)[0];
+    oldDate = date.lastChild.innerHTML;
+    var time = document.getElementsByName("time" + id)[0];
+    var input_name = document.createElement("input");
+    var input_date = document.createElement("input");
+    var input_time = document.createElement("input");
+    input_name.setAttribute("class", "form-control");
+    input_name.setAttribute("name", "i_name" + id);
+    input_name.setAttribute("value", name.lastChild.innerHTML);
+    input_date.setAttribute("class", "form-control");
+    input_date.setAttribute("name", "i_date" + id);
+    input_date.setAttribute("type", "date");
+    input_date.setAttribute("value", date.lastChild.innerHTML);
+    input_time.setAttribute("class", "form-control");
+    input_time.setAttribute("name", "i_time" + id);
+    input_time.setAttribute("type", "time");
+    input_time.setAttribute("value", time.lastChild.innerHTML);
+    name.lastChild.remove();
+    name.appendChild(input_name);
+    date.lastChild.remove();
+    date.appendChild(input_date);
+    time.lastChild.remove();
+    time.appendChild(input_time);
+  });
+  $(document).on('click', '.editfunction-delete-btn', function (e) {
+    e.preventDefault();
+    var id = this.id.substr(-1);
+    var date = document.getElementsByName("date" + id)[0].innerHTML.substr(7);
+    $.ajax({
+      url: "/deletefunction",
+      type: "post",
+      data: {
+        'date': date
+      },
+      success: function success(response) {
+        document.getElementById("functionAccordian" + id).remove();
+      }
+    });
+    console.log(id, date);
+  });
+  $(document).on("click", ".editfunction-save-btn", function (e) {
+    e.preventDefault();
+    var id = this.id.substr(-1);
+    var name = document.getElementsByName("i_name" + id)[0].value;
+    var date = document.getElementsByName("i_date" + id)[0].value;
+    var time = document.getElementsByName("i_time" + id)[0].value;
+    $.ajax({
+      url: ".savefunction",
+      data: {
+        "name": name,
+        "date": date,
+        "oldDate": oldDate,
+        "time": time
+      },
+      success: function success(response) {},
+      error: function (_error2) {
+        function error(_x2) {
+          return _error2.apply(this, arguments);
+        }
+
+        error.toString = function () {
+          return _error2.toString();
+        };
+
+        return error;
+      }(function (response) {
+        alert(JSON.parse(error.responseText).message);
+      })
+    });
+    console.log(name, date, time);
   });
 });
 

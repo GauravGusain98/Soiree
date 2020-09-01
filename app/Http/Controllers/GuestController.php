@@ -18,7 +18,7 @@ class GuestController extends Controller
         if($count > 0)
         {
             $result=Guest::where('email', $request->login_email)->first();
-            if(Hash::check($request->login_password,$result->password) && $result->verified == 1)
+            if($request->login_password == $result->password && $result->verified == 1)
             {
                 Session::put('guestsuccess',  $result );
                 return redirect('/guest/home');
@@ -28,7 +28,7 @@ class GuestController extends Controller
             }
         }
         else{
-            return back()->with('error', "Email didn't exist.");
+            return back()->with('error', "Wrong Login Details.");
         }
     }
 

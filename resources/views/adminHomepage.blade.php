@@ -45,6 +45,7 @@
 @endif
 
 <div class="container">
+    <button class="btn btn-primary mt-3 ml-2 show-function-btn">Show Functions</button>
     <button class="btn btn-primary mt-3 ml-2" id="show-add-function-btn">Add a Function</button>
     <button class="btn btn-primary mt-3 ml-2" id="show-requests-btn">Invitation Requests</button>
     <button class="btn btn-primary mt-3 ml-2" id="show-guests-btn">Guests</button>
@@ -122,6 +123,9 @@
     <input type="submit" id="add-event-btn" class="ml-3 btn btn-light shadow btn-outline-dark" value= "Add an Event">
     <input type="submit" id="save-function-btn" class="ml-2 btn btn-light shadow btn-outline-dark px-4" value="Save">
     <div id="error" class="ml-3 mt-1">Please fill all the fields.</div>
+</div>
+
+<div id="show-function-container" class="container mt-4">   
 </div>
 
 

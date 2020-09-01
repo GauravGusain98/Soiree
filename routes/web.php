@@ -51,3 +51,6 @@ Route::post("/status", "AdminHomepageController@status");
 Route::post("/cancelled", "AdminHomepageController@showCancelledRequests");
 Route::post("/changestatus", "AdminHomepageController@changeStatus");
 Route::post("/addfunction", "EventController@addFunction");
+Route::post("/showfunction", "EventController@showFunction");
+Route::post("/savefunction","EventController@saveFunction")->name('saveedit');
+Route::post("/deletefunction","EventController@deleteFunction")->name('deleteFunction');
