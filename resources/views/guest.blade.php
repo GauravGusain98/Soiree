@@ -3,8 +3,8 @@
 
 
 @section('guestlogin')
-@if(Session('success'))
-    {!!redirect('http://soiree.test/guest/home')!!}
+@if(Session('guestsuccess'))
+    <script>window.location.replace("{{route('guest-homepage')}}")</script>
 @endif
 <div class="navbar text-light bg-dark shadow-sm">
     <div class="container">
@@ -41,10 +41,5 @@
         <h6 style="color:red;" class="mx-4">{{Session('error')}}</h6>
         @endif
 </div>
-    
-<h1>{{Session('success')}}</h1>
-
- 
-
 
 @endsection

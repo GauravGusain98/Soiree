@@ -13,7 +13,7 @@ class AdminController extends Controller
     public function showHome(){
         request()->session()->forget('adminverify'); // to ensure that registered_success page should not through url once user again open this page.
         if(Auth::check()){      // if user is already logged in then he should redirected to homepage
-            return redirect('admin/home');
+            return redirect(route('admin-home'));
         }
         else 
         return view('admin');
@@ -38,12 +38,12 @@ class AdminController extends Controller
                 if($result->verified == 0)     // user account is not activated
                 {
                     Session::put('adminverification',  $result->email_address );  // starting a session
-                    return redirect('/admin/registered');   // redirecting to verification code entry page.
+                    return redirect(route('admin-registered'));   // redirecting to verification code entry page.
                 }
                 else        // user account is activated
                 {
                 Session::put('adminsuccess',  $result->name );  // starting a session
-                return redirect('/admin/home'); // redirecting to home page
+                return redirect(route("admin-home")); // redirecting to home page
                 }
             }
             else{   // if password didn't match
@@ -83,13 +83,13 @@ class AdminController extends Controller
                 
         MailController::sendVerificationMail($new_admin->name, $new_admin->email_address, $new_admin->verification_code);
         Session::put('adminverification', $req->email);
-        return redirect("/admin/registered");
+        return redirect(route('admin-registered'));
                
     }
 
     public function logout(){
         request()->session()->flush();
-        return redirect("http://soiree.test/adminpage");
+        return redirect(route("admin-page"));
     }
 
     public function verify(request $request){
@@ -100,7 +100,7 @@ class AdminController extends Controller
             Admin::where('email_address', $request->email)->update(['verified' => 1]);
             Session::put('adminsuccess', $result->name);
             Session::put('AdminVerified',  "Your account has been activated.");  // starting a session
-            return redirect('/admin/home')->with("Activated","Your Account has been activated.");   // redirecting to verification code entry page.
+            return redirect(route("admin-home"))->with("Activated","Your Account has been activated.");   // redirecting to verification code entry page.
         }
         else{
             return redirect()->back()->with('ActivationError', "Wrong Activation Code.");

@@ -1,13 +1,13 @@
 @extends ("layout.header")
 @if(!Session('adminsuccess'))
-<script>window.location.replace("http://soiree.test/adminpage")</script>
+<script>window.location.replace("{{route('admin-page')}}")</script>
 @endif
 
 
 @section("adminHomepage")
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="{{ url('/admin/home') }}">
+        <a class="navbar-brand" href="{{ url('http://wordpress.local') }}" target="_blank">
             Soiree
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -24,12 +24,12 @@
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/adminlogout"
+                            <a class="dropdown-item" href="{{route('admin-logout')}}"
                                 onclick="event.preventDefault();
                                                 document.getElementById('logout-form').submit();">
                                 Logout
                             </a>
-                            <form id="logout-form" action="/adminlogout" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{route('admin-logout')}}" method="POST" style="display: none;">
                                 @csrf
                             </form>
                     </div>

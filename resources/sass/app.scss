@@ -56,12 +56,20 @@
     display: none;
 }
 
+.edit-form{
+    margin-top:0.5em;
+}
+
+.editfunction-event-btn{
+    margin: 0.5em 0 0 1em; 
+}
+
 .editfunction-save-btn{
-    margin:-2em 0 0 2em;
+    margin:1em 0 0.5em 1em;
 }
 
 .editfunction-cancel-btn, .editfunction-delete-btn{
-    margin:-2em 0 0 0.5em;
+    margin:1em 0 0.5em 1em;
 }
 
 

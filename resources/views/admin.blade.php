@@ -34,7 +34,7 @@
 
 @section ("adminLogin")
     <div class="container" id="admin-login">
-        <form action="/admin" method="get" class="col-sm-10 col-lg-6">
+        <form action="{{ route('admin-login') }}" method="get" class="col-sm-10 col-lg-6">
         @csrf
             <div class="form-group">
                 <label>Email: </label>
@@ -54,7 +54,7 @@
 
 @section ("adminRegister")
     <div class="container" id="admin-register">
-        <form action="/admin" method="post" class="col-sm-10 col-lg-6">
+        <form action="{{ route('admin-registration') }}" method="post" class="col-sm-10 col-lg-6">
         @csrf
             <div class="form-group">
                 <label>Name: </label>

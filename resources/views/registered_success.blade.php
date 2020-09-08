@@ -1,5 +1,5 @@
 @if(!Session('adminverification'))
-<script>window.location.replace("/adminpage")</script>
+<script>window.location.replace("{{route('admin-page')}}")</script>
 @else
 @extends ('layout.header')
 @section("success")
@@ -10,7 +10,7 @@
 </div>
 
 <div class="container">
-    <form action="/adminverify" method="POST"  class="col-lg-6 col-md-5 col-sm-10 mt-5">
+    <form action="{{route('admin-verify')}}" method="POST"  class="col-lg-6 col-md-5 col-sm-10 mt-5">
     @csrf
         <div class="form-group" style="display:none;">
             <input name="email"  value="{{ Session('adminverification') }}">

@@ -18,39 +18,40 @@ Route::get('/', function () {
 });
 Auth::routes();
 
-Route::post("/adminverify", "AdminController@verify")->name('verify');
+Route::post("/adminverify", "AdminController@verify")->name('admin-verify');
 
 Route::post("/guest/login","GuestController@login")->name("guest_login");
-Route::get("/guest/login","GuestController@index");
+Route::get("/guest/login","GuestController@index")->name("guest-login");
 
-Route::get("/adminpage", "AdminController@showHome");
-Route::post("/adminlogout", "AdminController@logout");
-Route::post("/guestlogout", "GuestController@logout");
+Route::get("/adminpage", "AdminController@showHome")->name("admin-page");
+Route::post("/adminlogout", "AdminController@logout")->name("admin-logout");
+Route::post("/guestlogout", "GuestController@logout")->name("guest-logout");
 
-Route::get("/admin","AdminController@login");
-Route::post("/admin","AdminController@register");
+Route::get("/admin","AdminController@login")->name("admin-login");
+Route::post("/admin","AdminController@register")->name("admin-registration");
 
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/admin/home', function(){
     return view('adminHomepage');
-});
+})->name("admin-home");
 
 Route::get('/guest/home', function(){
     return view('guestHomepage');
-});
+})->name('guest-homepage');
 
 Route::get("/admin/registered",function(){
     return view("registered_success");
-});
+})->name('admin-registered');
 
-Route::post("/requests", "AdminHomepageController@showRequests");
-Route::post("/guests", "AdminHomepageController@showGuests");
-Route::post("/status", "AdminHomepageController@status");
-Route::post("/cancelled", "AdminHomepageController@showCancelledRequests");
-Route::post("/changestatus", "AdminHomepageController@changeStatus");
-Route::post("/addfunction", "EventController@addFunction");
-Route::post("/showfunction", "EventController@showFunction");
-Route::post("/savefunction","EventController@saveFunction")->name('saveedit');
-Route::post("/deletefunction","EventController@deleteFunction")->name('deleteFunction');
+Route::post("/requests", "AdminHomepageController@showRequests")->name("guest-requests");
+Route::post("/guests", "AdminHomepageController@showGuests")->name("verified-guests");
+Route::post("/status", "AdminHomepageController@status")->name('status');
+Route::post("/cancelled", "AdminHomepageController@showCancelledRequests")->name('cancelled-request');
+Route::post("/changestatus", "AdminHomepageController@changeStatus")->name('change-status');
+Route::post("/addfunction", "EventController@addFunction")->name('add-function');
+Route::post("/showfunction", "EventController@showFunction")->name('show-function');
+Route::post("/savefunction","EventController@saveFunction")->name('save-edited-function');
+Route::post("/deletefunction","EventController@deleteFunction")->name('delete-function');
+Route::post("/showeditedfunction","EventController@showEditedFunction")->name('edit-function');

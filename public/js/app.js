@@ -49722,7 +49722,8 @@ module.exports = function(module) {
  */
 var _require = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"),
     each = _require.each,
-    post = _require.post;
+    post = _require.post,
+    trim = _require.trim;
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -49975,13 +49976,17 @@ $(document).ready(function () {
 
   function functionError() {
     var error = 0;
+    if ($("[name=function-name]").val().trim() == "" || $("[name=function-date]").val().trim() == "" || $("[name=function-time]").val().trim() == "") error = 1;
 
     if (eventCount != 0) {
-      var eventName = document.getElementsByName("event-" + eventCount)[0].value;
-      var eventTime = document.getElementsByName("event-time-" + eventCount)[0].value;
-      if (eventName == "" || eventTime == "") error = 1;
-    } else if (eventCount == 0) {
-      if ($("[name=function-name]").val() == "" || $("[name=function-date]").val() == "" || $("[name=function-time]").val() == "") error = 1;
+      var i = 1;
+
+      while (i <= eventCount) {
+        var eventName = document.getElementsByName("event-" + i)[0].value.trim();
+        var eventTime = document.getElementsByName("event-time-" + i)[0].value.trim();
+        if (eventName == "" || eventTime == "") error = 1;
+        i++;
+      }
     }
 
     return error;
@@ -50038,19 +50043,9 @@ $(document).ready(function () {
           document.getElementById("add-function-container").style.display = "none";
           alert("Event saved Successfully");
         },
-        error: function (_error) {
-          function error(_x) {
-            return _error.apply(this, arguments);
-          }
-
-          error.toString = function () {
-            return _error.toString();
-          };
-
-          return error;
-        }(function (error) {
-          alert(JSON.parse(error.responseText).message);
-        })
+        error: function error(_error) {
+          alert(JSON.parse(_error.responseText).message);
+        }
       });
     }
   });
@@ -50162,55 +50157,124 @@ $(document).ready(function () {
       document.getElementById("cancel-edit" + id).remove();
     }
 
+    eventCount = 0;
     var collapseDiv = document.getElementById("collapse" + id);
-    var saveBtn = document.createElement('button');
-    saveBtn.innerHTML = "Save";
-    saveBtn.setAttribute("id", "save-function" + id);
-    saveBtn.classList.add("btn", "btn-success", "editfunction-save-btn");
-    var cancelBtn = document.createElement('button');
-    cancelBtn.innerHTML = "Cancel";
-    cancelBtn.classList.add("btn", "btn-danger", "editfunction-cancel-btn", "show-function-btn");
-    var deleteBtn = document.createElement('button');
-    deleteBtn.innerHTML = "Delete";
-    deleteBtn.setAttribute("id", "delete-function" + id);
-    deleteBtn.classList.add("btn", "btn-light", "editfunction-delete-btn");
-    collapseDiv.appendChild(saveBtn);
-    collapseDiv.appendChild(cancelBtn);
-    collapseDiv.appendChild(deleteBtn);
-    var name = document.getElementsByName("name" + id)[0];
-    var date = document.getElementsByName("date" + id)[0];
-    oldDate = date.lastChild.innerHTML;
-    var time = document.getElementsByName("time" + id)[0];
-    var input_name = document.createElement("input");
-    var input_date = document.createElement("input");
-    var input_time = document.createElement("input");
-    input_name.setAttribute("class", "form-control");
-    input_name.setAttribute("name", "i_name" + id);
-    input_name.setAttribute("value", name.lastChild.innerHTML);
-    input_date.setAttribute("class", "form-control");
-    input_date.setAttribute("name", "i_date" + id);
-    input_date.setAttribute("type", "date");
-    input_date.setAttribute("value", date.lastChild.innerHTML);
-    input_time.setAttribute("class", "form-control");
-    input_time.setAttribute("name", "i_time" + id);
-    input_time.setAttribute("type", "time");
-    input_time.setAttribute("value", time.lastChild.innerHTML);
-    name.lastChild.remove();
-    name.appendChild(input_name);
-    date.lastChild.remove();
-    date.appendChild(input_date);
-    time.lastChild.remove();
-    time.appendChild(input_time);
+    var form = document.createElement("div");
+    form.classList.add("edit-form", "container");
+    collapseDiv.innerHTML = "";
+    collapseDiv.appendChild(form);
+    $.ajax({
+      url: "/showeditedfunction",
+      type: "post",
+      data: {
+        "id": id
+      },
+      success: function success(response) {
+        oldDate = response["date"];
+        var len = Object.keys(response).length;
+        var name_formgroup = document.createElement("div");
+        name_formgroup.classList.add("form-group");
+        var name_label = document.createElement("label");
+        name_label.innerHTML = "Name:";
+        var input_name = document.createElement("input");
+        input_name.setAttribute("class", "form-control");
+        input_name.setAttribute("name", "i_name" + id);
+        input_name.setAttribute("value", response['name']);
+        name_formgroup.appendChild(name_label);
+        name_formgroup.appendChild(input_name);
+        var date_formgroup = document.createElement("div");
+        date_formgroup.classList.add("form-group");
+        var date_label = document.createElement("label");
+        date_label.innerHTML = "Date:";
+        var input_date = document.createElement("input");
+        input_date.setAttribute("class", "form-control");
+        input_date.setAttribute("name", "i_date" + id);
+        input_date.setAttribute("type", "date");
+        input_date.setAttribute("value", response['date']);
+        date_formgroup.appendChild(date_label);
+        date_formgroup.appendChild(input_date);
+        var time_formgroup = document.createElement("div");
+        time_formgroup.classList.add("form-group");
+        var time_label = document.createElement("label");
+        time_label.innerHTML = "Time:";
+        var input_time = document.createElement("input");
+        input_time.setAttribute("class", "form-control");
+        input_time.setAttribute("name", "i_time" + id);
+        input_time.setAttribute("type", "time");
+        input_time.setAttribute("value", response["time"]);
+        time_formgroup.appendChild(time_label);
+        time_formgroup.appendChild(input_time);
+        form.appendChild(name_formgroup);
+        form.appendChild(date_formgroup);
+        form.appendChild(time_formgroup);
+
+        for (var j = 1; j <= (len - 3) / 2; j++) {
+          if (response['event1'] != null) {
+            eventCount++;
+            var cross = document.createElement("a");
+            cross.classList.add("text-danger", "fas", "fa-times", "ml-3", "cross-edit");
+            cross.setAttribute("id", "cross-edit-" + id + "-" + eventCount);
+            cross.setAttribute("href", "");
+            var event_formgroup = document.createElement("div");
+            event_formgroup.classList.add("form-group", "event-div" + eventCount);
+            var event_label = document.createElement("label");
+            event_label.innerHTML = "Event" + eventCount;
+            var input_event = document.createElement("input");
+            input_event.classList.add("form-control");
+            input_event.setAttribute("name", "event-" + id + "-" + eventCount);
+            input_event.setAttribute("value", response["event" + eventCount]);
+            event_formgroup.appendChild(event_label);
+            event_formgroup.appendChild(cross);
+            event_formgroup.appendChild(input_event);
+            var event_time_formgroup = document.createElement("div");
+            event_time_formgroup.classList.add("form-group", "event-time-div" + eventCount);
+            var event_time_label = document.createElement("label");
+            event_time_label.innerHTML = "Event Time";
+            var input_event_time = document.createElement("input");
+            input_event_time.setAttribute("class", "form-control");
+            input_event_time.setAttribute("name", "event-time-" + id + "-" + eventCount);
+            input_event_time.setAttribute("type", "time");
+            input_event_time.setAttribute("value", response["eventTime" + eventCount]);
+            event_time_formgroup.appendChild(event_time_label);
+            event_time_formgroup.appendChild(input_event_time);
+            form.appendChild(event_formgroup);
+            form.appendChild(event_time_formgroup);
+          }
+        }
+
+        var newline = document.createElement('br');
+        var saveBtn = document.createElement('button');
+        saveBtn.innerHTML = "Save";
+        saveBtn.setAttribute("id", "save-function" + id);
+        saveBtn.classList.add("btn", "btn-success", "editfunction-save-btn");
+        var cancelBtn = document.createElement('button');
+        cancelBtn.innerHTML = "Cancel";
+        cancelBtn.setAttribute("id", "cancel-edit" + id);
+        cancelBtn.classList.add("btn", "btn-danger", "editfunction-cancel-btn");
+        var deleteBtn = document.createElement('button');
+        deleteBtn.innerHTML = "Delete";
+        deleteBtn.setAttribute("id", "delete-function" + id);
+        deleteBtn.classList.add("btn", "btn-light", "editfunction-delete-btn");
+        var eventBtn = document.createElement('button');
+        eventBtn.innerHTML = "Add an Event";
+        eventBtn.classList.add("btn", "btn-primary", "btn-sm", "editfunction-event-btn");
+        eventBtn.setAttribute("id", "editfunction-event-btn" + id);
+        collapseDiv.appendChild(eventBtn);
+        collapseDiv.appendChild(newline);
+        collapseDiv.appendChild(saveBtn);
+        collapseDiv.appendChild(cancelBtn);
+        collapseDiv.appendChild(deleteBtn);
+      }
+    });
   });
   $(document).on('click', '.editfunction-delete-btn', function (e) {
     e.preventDefault();
     var id = this.id.substr(-1);
-    var date = document.getElementsByName("date" + id)[0].innerHTML.substr(7);
     $.ajax({
       url: "/deletefunction",
       type: "post",
       data: {
-        'date': date
+        'date': oldDate
       },
       success: function success(response) {
         document.getElementById("functionAccordian" + id).remove();
@@ -50218,36 +50282,142 @@ $(document).ready(function () {
     });
     console.log(id, date);
   });
+
+  function editfunctionError(id) {
+    var error = 0;
+    var Name = document.getElementsByName("i_name" + id)[0].value;
+    var Time = document.getElementsByName("i_date" + id)[0].value;
+    var Date = document.getElementsByName("i_time" + id)[0].value;
+    if (Name.trim() == "" || Time.trim() == "" || Date.trim() == "") error = 1;
+    var i = 1;
+
+    if (eventCount != 0) {
+      while (i <= eventCount) {
+        if (document.getElementsByName("event-" + id + "-" + i)[0].value.trim() == "" || document.getElementsByName("event-time-" + id + "-" + i)[0].value.trim() == "") {
+          error = 1;
+        }
+
+        i++;
+      }
+    }
+
+    return error;
+  }
+
   $(document).on("click", ".editfunction-save-btn", function (e) {
     e.preventDefault();
     var id = this.id.substr(-1);
-    var name = document.getElementsByName("i_name" + id)[0].value;
-    var date = document.getElementsByName("i_date" + id)[0].value;
-    var time = document.getElementsByName("i_time" + id)[0].value;
-    $.ajax({
-      url: ".savefunction",
-      data: {
+
+    var _error2 = editfunctionError(id);
+
+    if ($(".edit-error") != undefined) $(".edit-error").remove();
+
+    if (_error2 == 0) {
+      var name = document.getElementsByName("i_name" + id)[0].value;
+      var date = document.getElementsByName("i_date" + id)[0].value;
+      var time = document.getElementsByName("i_time" + id)[0].value;
+      var obj = {
         "name": name,
         "date": date,
         "oldDate": oldDate,
-        "time": time
-      },
-      success: function success(response) {},
-      error: function (_error2) {
-        function error(_x2) {
-          return _error2.apply(this, arguments);
+        "time": time,
+        "count": eventCount
+      };
+      console.log(oldDate);
+
+      if (eventCount > 0) {
+        var i = 1;
+
+        while (i <= eventCount) {
+          obj["event" + i] = document.getElementsByName("event-" + id + "-" + i)[0].value;
+          obj["eventtime" + i] = document.getElementsByName("event-time-" + id + "-" + i)[0].value;
+          i++;
         }
+      }
 
-        error.toString = function () {
-          return _error2.toString();
-        };
+      console.log(obj);
+      $.ajax({
+        url: "/savefunction",
+        type: "post",
+        data: obj,
+        success: function success(response) {
+          document.getElementsByClassName("show-function-btn")[0].click();
+          alert("Event saved Successfully");
+        },
+        error: function error(response) {
+          alert(JSON.parse(_error2.responseText).message);
+        }
+      });
+    } else {
+      $("#editfunction-event-btn" + id).after("<span class='edit-error ml-2' style='color:red;'>Please fill all the details.</span>");
+    }
+  });
+  $(document).on("click", ".editfunction-cancel-btn", function (e) {
+    document.getElementsByClassName("show-function-btn")[0].click();
+  });
+  $(document).on('click', '.editfunction-event-btn', function (e) {
+    var id = this.id.substr(-1);
+    var error = editfunctionError(id);
+    if ($(".edit-error") != undefined) $(".edit-error").remove();
 
-        return error;
-      }(function (response) {
-        alert(JSON.parse(error.responseText).message);
-      })
-    });
-    console.log(name, date, time);
+    if (error > 0) {
+      $("#editfunction-event-btn" + id).after("<span class='edit-error ml-2' style='color:red;'>Please fill all the details.</span>");
+    } else {
+      e.preventDefault();
+      eventCount++;
+      var cross = document.createElement("a");
+      cross.classList.add("text-danger", "fas", "fa-times", "ml-3", "cross-edit");
+      cross.setAttribute("id", "cross-edit-" + id + "-" + eventCount);
+      cross.setAttribute("href", "");
+      var event_formgroup = document.createElement("div");
+      event_formgroup.classList.add("form-group", "event-div" + eventCount);
+      var event_label = document.createElement("label");
+      event_label.innerHTML = "Event" + eventCount;
+      var input_event = document.createElement("input");
+      input_event.classList.add("form-control");
+      input_event.setAttribute("name", "event-" + id + "-" + eventCount);
+      event_formgroup.appendChild(event_label);
+      event_formgroup.appendChild(cross);
+      event_formgroup.appendChild(input_event);
+      var event_time_formgroup = document.createElement("div");
+      event_time_formgroup.classList.add("form-group", "event-time-div" + eventCount);
+      var event_time_label = document.createElement("label");
+      event_time_label.innerHTML = "Event Time";
+      var input_event_time = document.createElement("input");
+      input_event_time.setAttribute("class", "form-control");
+      input_event_time.setAttribute("name", "event-time-" + id + "-" + eventCount);
+      input_event_time.setAttribute("type", "time");
+      event_time_formgroup.appendChild(event_time_label);
+      event_time_formgroup.appendChild(input_event_time);
+      var form = document.getElementsByClassName("edit-form")[0];
+      form.appendChild(event_formgroup);
+      form.appendChild(event_time_formgroup);
+    }
+  });
+  $(document).on('click', '.cross-edit', function (e) {
+    e.preventDefault();
+    var id = this.id.substr(-3, 1);
+    var num = this.id.substr(-1);
+    var elem1 = document.getElementsByClassName("event-div" + num)[0];
+    var elem2 = document.getElementsByClassName("event-time-div" + num)[0];
+    elem1.remove();
+    elem2.remove();
+
+    for (var i = parseInt(num) + 1; i <= eventCount; i++) {
+      var divelement1 = document.getElementsByClassName("event-div" + i)[0];
+      ;
+      var divelement2 = document.getElementsByClassName("event-time-div" + i)[0];
+      document.getElementById("cross-edit-" + id + "-" + i).setAttribute('id', "cross-edit-" + id + "-" + (i - 1));
+      divelement1.firstChild.innerHTML = "Event" + (i - 1);
+      divelement1.lastChild.setAttribute("name", "event-" + id + "-" + (i - 1));
+      divelement2.lastChild.setAttribute("name", "event-time-" + id + "-" + (i - 1));
+      divelement1.classList.add("event-div" + (i - 1));
+      divelement1.classList.remove("event-div" + i);
+      divelement2.classList.add("event-time-div" + (i - 1));
+      divelement2.classList.remove("event-time-div" + i);
+    }
+
+    eventCount--;
   });
 });
 
