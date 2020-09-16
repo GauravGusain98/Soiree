@@ -8,11 +8,10 @@
 </head>
 <body>
     @yield('success')
-    @yield('adminButtons')
-    @yield("adminLogin")
-    @yield('adminRegister')
+    @yield('adminPage')
     @yield('guestlogin')
     @yield("adminHomepage")
+    @yield("guestHomepage")
     <script src="/js/app.js"></script>
 </body>
 </html>

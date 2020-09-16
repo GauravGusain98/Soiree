@@ -47,6 +47,16 @@ return [
             'hash' => false,
         ],
 
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+        'guest' => [
+            'driver' => 'session',
+            'provider' => 'guests',
+        ],
+
     ],
 
     /*
@@ -77,10 +87,15 @@ return [
             'table' => 'admins',
         ],
 
-        // 'admin' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Admin::class,
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
+        ],
+
+        'guests' => [
+            'driver' => 'eloquent',
+            'model' => App\Guest::class,
+        ],
     ],
 
 

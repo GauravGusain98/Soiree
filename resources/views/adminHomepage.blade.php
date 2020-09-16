@@ -1,8 +1,4 @@
 @extends ("layout.header")
-@if(!Session('adminsuccess'))
-<script>window.location.replace("{{route('admin-page')}}")</script>
-@endif
-
 
 @section("adminHomepage")
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -20,7 +16,7 @@
                 <!-- Authentication Links -->
                 <li class="nav-item dropdown">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{Session('adminsuccess')}} <span class="caret"></span>
+                        {{Session('adminSuccess')[0]->name}} <span class="caret"></span>
                     </a>
 
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -38,9 +34,9 @@
         </div>
     </div>
 </nav>
-@if(Session('AdminVerified'))
+@if(Session('Activated'))
 <div class="container">
-    <div class="text-success" style="font-size:1.5rem">{{Session('AdminVerified')}}</div>
+    <div class="text-success" style="font-size:1.5rem">{{Session('Activated')}}</div>
 </div>
 @endif
 
@@ -114,18 +110,18 @@
             <label>Function date</label>
             <input name="function-date" class="form-control" type='date' required>
         </div>
-        
+
         <div class="form-group">
             <label>Function time</label>
             <input name="function-time" class="form-control" type='time' required>
-        </div>  
+        </div>
     </form>
     <input type="submit" id="add-event-btn" class="ml-3 btn btn-light shadow btn-outline-dark" value= "Add an Event">
     <input type="submit" id="save-function-btn" class="ml-2 btn btn-light shadow btn-outline-dark px-4" value="Save">
     <div id="error" class="ml-3 mt-1">Please fill all the fields.</div>
 </div>
 
-<div id="show-function-container" class="container mt-4">   
+<div id="show-function-container" class="container mt-4">
 </div>
 
 

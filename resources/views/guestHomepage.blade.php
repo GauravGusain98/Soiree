@@ -1,9 +1,6 @@
 @extends ("layout.header")
-@if(!Session('guestsuccess'))
-<script>window.location.replace("{{route('guest-login')}}")</script>
-@endif
 
-@if(Session('guestsuccess'))
+@section('guestHomepage')
 <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('http://wordpress.local') }}">
@@ -43,7 +40,7 @@
                 </div>
             </div>
         </nav>
-        
+
 <div class="container text-center mt-4">
     <h1 style="font-size:3em;">Welcome to {{json_decode(Session::get('guestsuccess'))->function}}  </h1>
 </div>
@@ -78,6 +75,12 @@
 <div class="container col-lg-9 col-md-10 col-sm-11 mt-3">
     <p style="font-size:1.3em;">Get ready for Soiree September 2020. Many ventures and ideas are waiting for you. Get a chance to meet many business tycoons and investors. This is a great chance for transforming your ideas into a great business. This time Soiree is coming up with many new events and functions. So, quickly register to get the invitation of Soiree September 2020.</p>
     <div>
+        <h1 style="text-decoration: underline;">Event Date: </h1>
+        <ul>
+            <li><p style="font-size: 1.2em;">{{json_decode(Session::get('guestsuccess'))->date }} </p></li>
+        </ul>
+    </div>
+    <div>
         <h1 style="text-decoration: underline;">Event Schedule:</h1>
         <ul>
             <li><p style="font-size: 1.2em;">Function start : {{json_decode(Session::get('guestsuccess'))->time }} </p></li>
@@ -101,5 +104,4 @@
         </ul>
     </div>
 </div>
-
-@endif
+@endsection

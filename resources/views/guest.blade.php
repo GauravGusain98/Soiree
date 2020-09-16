@@ -3,9 +3,6 @@
 
 
 @section('guestlogin')
-@if(Session('guestsuccess'))
-    <script>window.location.replace("{{route('guest-homepage')}}")</script>
-@endif
 <div class="navbar text-light bg-dark shadow-sm">
     <div class="container">
         <a class="navbar-brand display-4" href="http://wordpress.local" style="font-size:1.5rem;">  Soiree    </a>
@@ -28,14 +25,14 @@
         <form action="{{route('guest_login')}}" method="post" class="col-sm-10 col-lg-6">
         @csrf
             <div class="form-group">
-                <label>Email: </label> 
-                <input class="form-control shadow" type="email" name="login_email" required>
+                <label>Email: </label>
+                <input class="form-control shadow" type="email" name="guestEmail" required>
             </div>
             <div class="form-group">
                 <label>Password: </label>
-                <input name="login_password" class="form-control shadow" type="password" required>
+                <input name="password" class="form-control shadow" type="password" required>
             </div>
-            <input id="guest-login-submit"class="btn btn-success shadow" type="submit" value="Login" > 
+            <input id="guest-login-submit"class="btn btn-success shadow" type="submit" value="Login" >
         </form>
         @if(Session('error'))     <!--error condition method 1-->
         <h6 style="color:red;" class="mx-4">{{Session('error')}}</h6>

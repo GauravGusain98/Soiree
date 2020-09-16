@@ -1,9 +1,6 @@
-@if(!Session('adminverification'))
-<script>window.location.replace("{{route('admin-page')}}")</script>
-@else
 @extends ('layout.header')
 @section("success")
-<div class="jumbotron">
+<div class="container jumbotron">
     <h1 class="display-4">You Are Registered Successfully,</h1>
     <p class="lead">Now please activate your account. An activation code is sent to your email.</p>
     <hr class="my-4">
@@ -14,7 +11,7 @@
     @csrf
         <div class="form-group" style="display:none;">
             <input name="email"  value="{{ Session('adminverification') }}">
-        </div> 
+        </div>
         <div class="form-group">
             <label class="display-4" style="font-size:1.5rem;">Activation code</label>
             <input name="activation_code" class="form-control" id="activation-code" required>
@@ -28,5 +25,3 @@
     </form>
 </div>
 @endsection
-
-@endif
