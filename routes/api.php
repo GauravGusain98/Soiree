@@ -17,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/mobile-login', "AdminController@apiLogin");
+Route::post('/mobile-register', "AdminController@apiRegister");
+Route::post('/mobile-verify', "AdminController@apiVerification");
+Route::post('/mobile-guest-requests', 'AdminHomepageController@showRequests');
+Route::post('/mobile-functions', 'EventController@showFunction');
+Route::post('/mobile-guests', 'AdminHomepageController@showGuests');
+Route::post('/mobile-cancelled-requests', 'AdminHomepageController@showCancelledRequests');

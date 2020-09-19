@@ -64,4 +64,37 @@ class AdminController extends Controller
             return redirect()->back()->with('ActivationError', "Wrong Activation Code.");
         }
     }
+
+    public function apiLogin(Request $request)
+    {
+        if (Auth::guard('admin')->attempt(['email_address' => $request->Email, 'password' => $request->password, "verified" => 1])) {
+            return ["verify" => true, "error" => '', "user" => Auth::guard('admin')->user()];
+        } else {
+            return ['verify' => false, "error" => "Wrong Credentials", 'user' => null];
+        }
+    }
+
+    public function apiRegister(Request $req)
+    {
+        $new_admin = new Admin;
+        $new_admin->verification_code = md5(time());
+        $new_admin->name = $req->name;
+        $new_admin->email_address = $req->email;
+        $new_admin->password = bcrypt($req->password);
+        $new_admin->save();
+        MailController::sendVerificationMail($new_admin->name, $new_admin->email_address, $new_admin->verification_code);
+        return ['status' => true];
+    }
+
+    public function apiVerification(Request $request)
+    {
+        $result = Admin::where('email_address', $request->email)->first();
+        if ($result->verification_code == $request->code) {
+            Admin::where('email_address', $request->email)->update(['verified' => 1]);
+            Auth::guard('admin')->loginUsingId(Admin::where('email_address', $request->email)->get('id')[0]->id);
+            return ["status" => true, "user" => Auth::guard('admin')->user()];   // redirecting to verification code entry page.
+        } else {
+            return ['status' => false];
+        }
+    }
 }
